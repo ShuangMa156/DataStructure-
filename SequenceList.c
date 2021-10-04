@@ -65,23 +65,32 @@ int Length(SqList *L)
 int InsertList(SqList *L,int data,int location);//向表中某个位置插入元素，并返回插入的数据
 int InsertList(SqList *L,int data,int location)
 {
-    if(location<1 || location>L->length)
+    if(L->length==0 && location==1)
     {
-        printf("插入位置%d不合法\n",location);
-        return 0;
+        L->elem[0]=data;
+        L->length++;
+        printf("第一个元素插入成功\n");
     }
-    if(L->length==L->sizelist)
+    else
     {
-        printf("表已满，插入失败\n");
-        return 0;
+       if(location<1 || location>L->length)
+       {
+           printf("插入位置%d不合法\n",location);
+           return 0;
+       }
+       if(L->length==L->sizelist)
+       {
+           printf("表已满，插入失败\n");
+           return 0;
+       }
+       for(int i=L->length-1;i>location-1;i--)//将表中下标为location-1~L->length的元素全部后移
+       {
+           L->elem[i]=L->elem[i-1];
+       }
+       L->elem[location-1]=data;
+       L->length=L->length+1;//表长加1
+       printf("元素插入成功\n");
     }
-    for(int i=L->length-1;i>location-1;i--)//将表中下标为location-1~L->length的元素全部后移
-    {
-        L->elem[i]=L->elem[i-1];
-        L->elem[i-1]=data;
-    }
-    //L->elem[i-1]=data;
-    L->length=L->length+1;//表长加1
     return data;//返回插入的数据
 }
 int DeleteList(SqList *L,int *data,int location);//删除表中某个位置上的元素，并返回删除的元素值
@@ -236,9 +245,10 @@ int main()
             }
         case 5:
             {
-                printf("请输入要插入元素的值和位置：");
-                scanf("%d，%d",&d,&l);
-                printf("\n");
+                printf("请输入插入元素的值:");
+                scanf("%d",&d);
+                printf("请输入插入元素的位置",location);
+                scanf("%d",&l);
                 InsertList(&list,d,l);
                 break;
             }
